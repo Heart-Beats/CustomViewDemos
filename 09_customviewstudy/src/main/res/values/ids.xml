@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="translate_left_X" type="id" />
+    <item name="translate_right_X" type="id" />
+    <item name="translate_top_Y" type="id" />
+    <item name="translate_bottom_Y" type="id" />
+    <item name="translateZ" type="id" />
+    <item name="rotationX" type="id" />
+    <item name="rotationY" type="id" />
+</resources>

@@ -1,7 +1,7 @@
 package com.example.togglebutton;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * @author 淡然爱汝不离

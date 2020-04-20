@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/01_YouKuMenu/01_YouKuMenu.iml" filepath="$PROJECT_DIR$/01_YouKuMenu/01_YouKuMenu.iml" group="CustomView/01_YouKuMenu" />
+      <module fileurl="file://$PROJECT_DIR$/02_ViewPager/02_ViewPager.iml" filepath="$PROJECT_DIR$/02_ViewPager/02_ViewPager.iml" group="CustomView/02_ViewPager" />
+      <module fileurl="file://$PROJECT_DIR$/03_PopupWindow/03_PopupWindow.iml" filepath="$PROJECT_DIR$/03_PopupWindow/03_PopupWindow.iml" group="CustomView/03_PopupWindow" />
+      <module fileurl="file://$PROJECT_DIR$/04_ToggleButton/04_ToggleButton.iml" filepath="$PROJECT_DIR$/04_ToggleButton/04_ToggleButton.iml" group="CustomView/04_ToggleButton" />
+      <module fileurl="file://$PROJECT_DIR$/05_CustomViewAttributes/05_CustomViewAttributes.iml" filepath="$PROJECT_DIR$/05_CustomViewAttributes/05_CustomViewAttributes.iml" group="CustomView/05_CustomViewAttributes" />
+      <module fileurl="file://$PROJECT_DIR$/06_MyViewPaper/06_MyViewPaper.iml" filepath="$PROJECT_DIR$/06_MyViewPaper/06_MyViewPaper.iml" group="CustomView/06_MyViewPaper" />
+      <module fileurl="file://$PROJECT_DIR$/07_QuickIndex/07_QuickIndex.iml" filepath="$PROJECT_DIR$/07_QuickIndex/07_QuickIndex.iml" group="CustomView/07_QuickIndex" />
+      <module fileurl="file://$PROJECT_DIR$/08_SlideLayout/08_SlideLayout.iml" filepath="$PROJECT_DIR$/08_SlideLayout/08_SlideLayout.iml" group="CustomView/08_SlideLayout" />
+      <module fileurl="file://$PROJECT_DIR$/09_customviewstudy/09_customviewstudy.iml" filepath="$PROJECT_DIR$/09_customviewstudy/09_customviewstudy.iml" group="CustomView/09_customviewstudy" />
+      <module fileurl="file://$PROJECT_DIR$/CustomView.iml" filepath="$PROJECT_DIR$/CustomView.iml" group="CustomView" />
+    </modules>
+  </component>
+</project>
