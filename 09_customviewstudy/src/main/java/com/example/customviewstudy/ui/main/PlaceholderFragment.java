@@ -23,7 +23,6 @@ import android.graphics.Path;
 import android.graphics.PathDashPathEffect;
 import android.graphics.PathEffect;
 import android.graphics.PathMeasure;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -39,7 +38,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
@@ -54,8 +52,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.customviewstudy.MyAnimatorSet;
 import com.example.customviewstudy.R;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -1324,7 +1328,7 @@ public class PlaceholderFragment extends Fragment {
                                 Keyframe keyframe = Keyframe.ofFloat(0, 0);
                                 Keyframe keyframe2 = Keyframe.ofFloat(0.5f, 100);
                                 Keyframe keyframe3 = Keyframe.ofFloat(1, 50);
-                                PropertyValuesHolder propertyValuesHolder = PropertyValuesHolder.ofKeyframe("percent", keyframe, keyframe2,keyframe3);
+                                PropertyValuesHolder propertyValuesHolder = PropertyValuesHolder.ofKeyframe("percent", keyframe, keyframe2, keyframe3);
                                 ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(finalDrawView8, propertyValuesHolder);
                                 objectAnimator.setDuration(5000);
                                 //线性插值器解决动画重复执行时卡顿问题，默认先加速再减速导致卡顿
@@ -1395,12 +1399,12 @@ public class PlaceholderFragment extends Fragment {
                         objectAnimatorButton7.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ObjectAnimator objectAnimator = ObjectAnimator.ofObject(finalDrawView9,"color", new ArgbEvaluator(), 0xFFFF0000, 0x00FF00);
+                                ObjectAnimator objectAnimator = ObjectAnimator.ofObject(finalDrawView9, "color", new ArgbEvaluator(), 0xFFFF0000, 0x00FF00);
                                 objectAnimator.setDuration(5000);
                                 //线性插值器解决动画重复执行时卡顿问题，默认先加速再减速导致卡顿
                                 objectAnimator.setInterpolator(new LinearInterpolator());
 
-                                ObjectAnimator objectAnimator2 = ObjectAnimator.ofObject(finalDrawView9,"centerPoint", new PointFEvaluator(),
+                                ObjectAnimator objectAnimator2 = ObjectAnimator.ofObject(finalDrawView9, "centerPoint", new PointFEvaluator(),
                                         new PointF(0, 0), new PointF(100, 100));
                                 objectAnimator2.setDuration(5000);
                                 //线性插值器解决动画重复执行时卡顿问题，默认先加速再减速导致卡顿
@@ -1413,7 +1417,7 @@ public class PlaceholderFragment extends Fragment {
 
                                 AnimatorSet animatorSet = new AnimatorSet();
                                 //三种效果等同
-                                animatorSet.playSequentially(objectAnimator,objectAnimator2,objectAnimator3);
+                                animatorSet.playSequentially(objectAnimator, objectAnimator2, objectAnimator3);
 
                                 // animatorSet.play(objectAnimator2).after(objectAnimator).before(objectAnimator3);
 
@@ -1497,6 +1501,147 @@ public class PlaceholderFragment extends Fragment {
                             }
                         });
                         parent.addView(objectAnimatorButton8, layoutParams16);
+                        break;
+                    case "小球运动":
+                        drawView = new View(getContext()) {
+
+                            List<point> points = new ArrayList<>();
+                            point centerPoint = new point();
+
+                            ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 100, 0L, TimeUnit.MICROSECONDS, new LinkedBlockingDeque<Runnable>(500),
+                                    new ThreadFactory() {
+                                        @Override
+                                        public Thread newThread(Runnable r) {
+                                            return new Thread(r, "线程池创建线程");
+                                        }
+                                    });
+
+                            {
+                                for (int i = 0; i < 100; i++) {
+                                    points.add(new point());
+                                }
+                            }
+
+                            @Override
+                            protected void onDraw(final Canvas canvas) {
+                                final float moveTime = 1 / 16f;
+                                centerPoint.draw(canvas);
+                                paint.setStrokeWidth(5);
+                                paint.setColor(Color.RED);
+
+                                for (point point : points) {
+                                    point.draw(canvas);
+                                    point.move(48f, moveTime);
+                                    if (point.distanceToCenter(point, centerPoint) <= 100) {
+                                        canvas.drawLine(point.x, point.y, centerPoint.x, centerPoint.y, paint);
+                                    }
+                                }
+                                threadPoolExecutor.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        invalidate();
+                                        try {
+                                            Thread.sleep((long) (moveTime * 1000));
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+
+                            class point {
+                                private float x;
+                                private float y;
+                                private float radius;
+                                private Paint paint = new Paint();
+                                private float randomR1;
+                                private float randomG1;
+                                private float randomB1;
+                                private float randomR2;
+                                private float randomG2;
+                                private float randomB2;
+                                private double angle;
+
+                                public point() {
+                                    x = (float) (Math.random() * 1000);
+                                    y = (float) (Math.random() * 1000);
+                                    randomR1 = (float) (Math.random() * 255);
+                                    randomG1 = (float) (Math.random() * 255);
+                                    randomB1 = (float) (Math.random() * 255);
+                                    randomR2 = (float) (Math.random() * 255);
+                                    randomG2 = (float) (Math.random() * 255);
+                                    randomB2 = (float) (Math.random() * 255);
+                                    radius = 20;
+                                    angle = Math.random() * 2 * Math.PI;
+                                }
+
+                                public point(float x, float y) {
+                                    this();
+                                    this.x = x;
+                                    this.y = y;
+                                }
+
+                                public point(float x, float y, float radius) {
+                                    this();
+                                    this.x = x;
+                                    this.y = y;
+                                    this.radius = radius;
+                                }
+
+                                void draw(Canvas canvas) {
+                                    int canvasWidth = canvas.getWidth();
+                                    int canvasHeight = canvas.getHeight();
+
+
+                                    edgeCollision(canvasWidth, canvasHeight);
+
+                                    paint.setShader(new LinearGradient(x - radius, y - radius, x + radius, y + radius,
+                                            Color.rgb(randomR1, randomG1, randomB1), Color.rgb(randomR2, randomG2, randomB2), Shader.TileMode.CLAMP));
+                                    canvas.drawCircle(x, y, radius, paint);
+
+                                }
+
+                                //超出屏幕边界处理, 碰撞效果
+                                private void edgeCollision(int canvasWidth, int canvasHeight) {
+                                    if (x - radius <= 0) {
+                                        angle = Math.PI - angle;
+                                        x = radius;
+                                    } else if (canvasWidth <= x + radius) {
+                                        angle = Math.PI - angle;
+                                        x = canvasWidth - radius;
+                                    }
+                                    if (y - radius <= 0) {
+                                        angle = angle - Math.PI;
+                                        y = radius;
+                                    } else if (canvasHeight <= y + radius) {
+                                        angle = angle - Math.PI;
+                                        y = canvasHeight - radius;
+                                    }
+                                }
+
+                                void move(float speed, float moveTime) {
+                                    x = (float) (x + speed * moveTime * Math.cos(angle));
+                                    y = (float) (y + speed * moveTime * Math.sin(angle));
+                                }
+
+                                float distanceToCenter(point point, point centerPoint) {
+                                    return (float) Math.sqrt((point.x - centerPoint.x) * (point.x - centerPoint.x) + (point.y - centerPoint.y) * (point.y - centerPoint.y));
+                                }
+
+                                @Override
+                                public String toString() {
+                                    return "point{" +
+                                            "x=" + x +
+                                            ", y=" + y +
+                                            ", radius=" + radius +
+                                            ", color1=#" + Float.toHexString(randomR1) + Float.toHexString(randomG1) + Float.toHexString(randomB1) +
+                                            ",color2=#" + Float.toHexString(randomR2) + Float.toHexString(randomG2) + Float.toHexString(randomB2) +
+                                            ", angle=" + angle * 180 / Math.PI + "°" +
+                                            '}';
+                                }
+                            }
+
+                        };
                         break;
                     default:
                         break;

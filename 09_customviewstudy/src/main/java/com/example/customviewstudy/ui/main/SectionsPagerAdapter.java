@@ -30,7 +30,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 break;
             case "动画":
                 TAB_TITLES = new String[]{"translationX/Y/Z", "rotationX/Y", "ViewPropertyAnimator-多属性", " ObjectAnimator", "ArgbEvaluator", "自定义Evaluator",
-                        "ofObject()", "PropertyValuesHolder","ofKeyframe()","AnimatorSet","ValueAnimator"};
+                        "ofObject()", "PropertyValuesHolder", "ofKeyframe()", "AnimatorSet", "ValueAnimator", "小球运动"};
                 break;
             default:
                 break;
